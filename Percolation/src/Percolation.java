@@ -3,7 +3,7 @@
 
   Created by Sergey Kleymenov on 21/06/2017.
  */
-import edu.princeton.cs.algs4.In;
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 import java.lang.IndexOutOfBoundsException;
@@ -118,10 +118,19 @@ public class Percolation {
 
     public static void main(String[] args)   // test client (optional)
     {
-        if (args.length != 2) return;
+        if (args.length != 1) return;
 
         int size = Integer.valueOf(args[0]);
-        int experiments = Integer.valueOf(args[1]);
+        Percolation percolation = new Percolation(size);
+
+        for (int i = 1; i <= size; i++)
+        {
+            for( int j=1; j<= size; j++)
+            {
+                System.out.print("\t" + percolation.xyTo1D(i,j));
+            }
+            System.out.println();
+        }
 
 
 
