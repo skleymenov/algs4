@@ -14,7 +14,7 @@ import java.lang.IllegalArgumentException;
 public class Percolation {
     private final int size;
     private final int top;
-    private final int open;
+    private boolean[] open;
     private final int bottom;
     private int openCount;
 
@@ -45,9 +45,9 @@ public class Percolation {
         this.size = n;
         this.top = 0;
         this.bottom = n*n +1;
-        this.open = n*n + 2;
+        this.open = new boolean[n*n];
         this.openCount = 0;
-        this.unionFind = new WeightedQuickUnionUF(n*n + 3);
+        this.unionFind = new WeightedQuickUnionUF(n*n + 2);
 
 
     }
@@ -56,7 +56,7 @@ public class Percolation {
         int i = xyTo1D(row, col);
 
         if (isOpen(row,col)) return;
-        unionFind.union(open,i);
+        open[i-1] = true;
         openCount += 1;
 
         if (row > 1)
@@ -95,11 +95,11 @@ public class Percolation {
     {
         int i = xyTo1D(row, col);
 
-        return unionFind.connected(open, i);
+        return open[i-1];
     }
     private boolean isOpen(int i)
     {
-        return unionFind.connected(open,i);
+        return open[i-1];
     }
     public boolean isFull(int row, int col)  // is site (row, col) full?
     {
