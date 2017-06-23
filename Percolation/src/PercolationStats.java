@@ -14,8 +14,6 @@
 import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.StdRandom;
 
-import java.lang.Math;
-
 public class PercolationStats
 {
     private double[] pStars;                // array of p* from each trial
