@@ -1,17 +1,17 @@
-/*
-  Percolation problem solution.
-
-  Created by Sergey Kleymenov on 21/06/2017.
- */
+/*-----------------------------------------------------------------------------
+*
+*  Author:          Sergey Kleymenov
+*  Written:         6/22/2017
+*  Last Updated:    6/23/2017
+*
+*  Percolation problem model for the Programming Assignment 1
+*
+------------------------------------------------------------------------------*/
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import java.lang.IndexOutOfBoundsException;
-import java.lang.IllegalArgumentException;
-
-
-
-public class Percolation {
+public class Percolation
+{
     private final int size;
     private final int top;
     private boolean[] open;
@@ -20,120 +20,147 @@ public class Percolation {
 
     private WeightedQuickUnionUF unionFind;
 
-    private void checkArgs(int row, int col)
+    /**
+     * Create n-by-n grid, with all sites blocked
+     * @param n grid size
+     */
+    public Percolation(int n)
     {
-        if (row <= 0 || row > this.size) throw new IndexOutOfBoundsException("row index out of bounds");
-        if (col <= 0 || col > this.size) throw new IndexOutOfBoundsException("col index aout of bound");
-    }
-    private int xyTo1D(int row, int col)
-    {
-        checkArgs(row,col);
-        return (row - 1) * size + col;
-    }
-
-    public Percolation(int n) throws IllegalArgumentException               // create n-by-n grid, with all sites blocked
-    {
-        if ( n <= 0)
+        if (n <= 0)
         {
             throw new IllegalArgumentException("Grid size must be greater then zero");
-        }
-        else if (n > java.lang.Math.sqrt(Integer.MAX_VALUE - 2))
+        } else if (n > java.lang.Math.sqrt(Integer.MAX_VALUE - 2))
         {
             throw new IllegalArgumentException("Take it easy");
         }
 
         this.size = n;
         this.top = 0;
-        this.bottom = n*n +1;
-        this.open = new boolean[n*n];
+        this.bottom = n * n + 1;
+        this.open = new boolean[n * n];
         this.openCount = 0;
-        this.unionFind = new WeightedQuickUnionUF(n*n + 2);
-
-
+        this.unionFind = new WeightedQuickUnionUF(n * n + 2);
     }
-    public void open(int row, int col)    // open site (row, col) if it is not open already
+
+    /**
+     * check that row and col arguments are within bounds.
+     * Throws IndexOutOfBoundsException otherwise.
+     * @param row row number
+     * @param col column nunber
+     */
+    private void checkArgs(int row, int col)
+    {
+        if (row <= 0 || row > this.size)
+            throw new IndexOutOfBoundsException("row index out of bounds");
+        if (col <= 0 || col > this.size)
+            throw new IndexOutOfBoundsException("col index out of bound");
+    }
+
+    /**
+     * convert 2d (row,col) coordinates to site number
+     * @param row row number
+     * @param col column number
+     * @return site number
+     */
+    private int xyTo1D(int row, int col)
+    {
+        checkArgs(row, col);
+        return (row - 1) * size + col;
+    }
+
+    /**
+     * open the site specified by 2d (row, col) coordinates
+     * @param row row number
+     * @param col column munber
+     */
+    public void open(int row, int col)
     {
         int i = xyTo1D(row, col);
 
-        if (isOpen(row,col)) return;
-        open[i-1] = true;
+        if (isOpen(row, col)) return;
+        open[i - 1] = true;
         openCount += 1;
 
         if (row > 1)
         {
             int above = xyTo1D(row - 1, col);
             if (isOpen(above)) unionFind.union(above, i);
-        }
-        else
+        } else
         {
             unionFind.union(top, i);
         }
 
-        if ( row < size )
+        if (row < size)
         {
-            int below = xyTo1D(row +1, col);
-            if (isOpen(below)) unionFind.union(below,i);
-        }
-        else
+            int below = xyTo1D(row + 1, col);
+            if (isOpen(below)) unionFind.union(below, i);
+        } else
         {
-            unionFind.union(bottom,i);
+            unionFind.union(bottom, i);
         }
 
-        if ( col > 1)
+        if (col > 1)
         {
-            int left = xyTo1D(row, col -1);
+            int left = xyTo1D(row, col - 1);
             if (isOpen(left)) unionFind.union(left, i);
         }
         if (col < size)
         {
-            int right = xyTo1D(row, col+1);
+            int right = xyTo1D(row, col + 1);
             if (isOpen(right)) unionFind.union(right, i);
         }
 
     }
-    public boolean isOpen(int row, int col)  // is site (row, col) open?
+
+    /**
+     * check if site specified by 2d (row,col) coordinates is open
+     * @param row row number
+     * @param col column number
+     * @return true if site is open
+     */
+    public boolean isOpen(int row, int col)
     {
         int i = xyTo1D(row, col);
 
-        return open[i-1];
+        return isOpen(i);
     }
+
+    /**
+     * check if site specified by site number is open
+     * @param i site number
+     * @return true if site is open
+     */
     private boolean isOpen(int i)
     {
-        return open[i-1];
+        return open[i - 1];
     }
-    public boolean isFull(int row, int col)  // is site (row, col) full?
+
+    /**
+     * check if site is full (connected to the top)
+     * @param row row number
+     * @param col column number
+     * @return true if site if full
+     */
+    public boolean isFull(int row, int col)
     {
         int i = xyTo1D(row, col);
 
         return unionFind.connected(top, i);
     }
-    public int numberOfOpenSites()       // number of open sites
+
+    /**
+     * @return number of open sites
+     */
+    public int numberOfOpenSites()
     {
         return openCount;
     }
-    public boolean percolates()              // does the system percolate?
+
+    /**
+     * @return true if grid percolates
+     */
+    public boolean percolates()
     {
         return unionFind.connected(top, bottom);
-    }
-
-    public static void main(String[] args)   // test client (optional)
-    {
-        if (args.length != 1) return;
-
-        int size = Integer.valueOf(args[0]);
-        Percolation percolation = new Percolation(size);
-
-        for (int i = 1; i <= size; i++)
-        {
-            for( int j=1; j<= size; j++)
-            {
-                System.out.print("\t" + percolation.xyTo1D(i,j));
-            }
-            System.out.println();
-        }
-
-
-
-
     }
 }
