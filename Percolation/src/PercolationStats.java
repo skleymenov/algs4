@@ -1,64 +1,105 @@
-/*
- * Created by Sergey Kleymenov on 23/06/2017.
- */
-import java.lang.IllegalArgumentException;
+/*-----------------------------------------------------------------------------
+*
+*  Author:          Sergey Kleymenov
+*  Written:         6/22/2017
+*  Last Updated:    6/23/2017
+*
+*  Execute:         java PercolationStats n T
+*
+*  Percolation problem Monte Carlo simulation for the Programming Assignment 1
+*  n - grid size
+*  T - number of trials
+*
+------------------------------------------------------------------------------*/
 import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.lang.Math;
-public class PercolationStats {
-    private double[] pStars;
-    private final double magicConst;
-    private final int size;
 
-    private double doTrial()
-    {
-        Percolation model = new Percolation(size);
-        StdRandom.setSeed(java.lang.System.currentTimeMillis());
-        while (! model.percolates())
-        {
-            int i = StdRandom.uniform(1, size + 1);
-            int j = StdRandom.uniform(1, size + 1);
-            model.open(i, j);
-        }
-        return ((double)model.numberOfOpenSites() / (double)(size*size));
+public class PercolationStats
+{
+    private double[] pStars;                // array of p* from each trial
+    private final double magicConst;        // to simplify 95% confidence interval
+    private final int size;                 // grid size
 
-    }
-    public PercolationStats(int n, int trials) // perform trials independent experiments on an n-by-n grid
+    /**
+     * perform trials independent experiments on an n-by-n grid
+     * @param n grid size
+     * @param trials number of trials
+     */
+    public PercolationStats(int n, int trials)
     {
-        if (n<=0 || trials <= 0) throw new IllegalArgumentException();
+        if (n <= 0 || trials <= 0) throw new IllegalArgumentException();
 
         this.pStars = new double[trials];
         this.magicConst = 1.96 / Math.sqrt(trials);
         this.size = n;
 
-        for ( int i = 0; i < trials; i++)
+        for (int i = 0; i < trials; i++)
         {
             pStars[i] = doTrial();
         }
     }
-    public double mean()                         // sample mean of percolation threshold
+
+    /**
+     * do a trial
+     * @return p* of current trial
+     */
+    private double doTrial()
+    {
+        Percolation model = new Percolation(size);
+        StdRandom.setSeed(java.lang.System.currentTimeMillis());
+        while (!model.percolates())
+        {
+            int i = StdRandom.uniform(1, size + 1);
+            int j = StdRandom.uniform(1, size + 1);
+            model.open(i, j);
+        }
+        return ((double) model.numberOfOpenSites() / (double) (size * size));
+
+    }
+
+    /**
+     * @return sample mean of percolation threshold
+     */
+    public double mean()
     {
         return StdStats.mean(pStars);
     }
-    public double stddev()                        // sample standard deviation of percolation threshold
+
+    /**
+     * @return sample standard deviation of percolation threshold
+     */
+    public double stddev()
     {
         return StdStats.stddev(pStars);
     }
-    public double confidenceLo()                  // low  endpoint of 95% confidence interval
+
+    /**
+     * @return low  endpoint of 95% confidence interval
+     */
+    public double confidenceLo()
     {
         return mean() - magicConst * stddev();
     }
-    public double confidenceHi()                  // high endpoint of 95% confidence interval
+
+    /**
+     * @return high endpoint of 95% confidence interval
+     */
+    public double confidenceHi()
     {
         return mean() + magicConst * stddev();
     }
 
-    public static void main(String[] args)        // test client (described below)
+    /**
+     * Test client. performs trials, prints results
+     * @param args grid size and number of trials
+     */
+    public static void main(String[] args)
     {
         if (args.length != 2) throw new IllegalArgumentException("Provide exactly 2 int args");
-        int size = Integer.valueOf(args[0]);
-        int trials = Integer.valueOf(args[0]);
+        int size = Integer.parseInt(args[0]);
+        int trials = Integer.parseInt(args[0]);
 
         PercolationStats stats = new PercolationStats(size, trials);
         System.out.println("mean\t\t\t\t\t= " + stats.mean());
