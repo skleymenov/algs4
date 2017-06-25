@@ -46,7 +46,6 @@ public class PercolationStats
     private double doTrial()
     {
         Percolation model = new Percolation(size);
-        StdRandom.setSeed(java.lang.System.currentTimeMillis());
         while (!model.percolates())
         {
             int i = StdRandom.uniform(1, size + 1);
