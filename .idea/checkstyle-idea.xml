@@ -5,10 +5,10 @@
       <map>
         <entry key="active-configuration" value="LOCAL_FILE:/Users/marchhare/Downloads/checkstyle-coursera.xml:Coursera ALG4" />
         <entry key="checkstyle-version" value="7.8.1" />
-        <entry key="location-0" value="CLASSPATH:/sun_checks.xml:The default Checkstyle rules" />
-        <entry key="location-1" value="LOCAL_FILE:/Users/marchhare/Downloads/checkstyle-coursera.xml:Coursera ALG4" />
-        <entry key="property-1.basedir" value="$PROJECT_DIR$" />
-        <entry key="property-1.suppressions" value="None" />
+        <entry key="location-0" value="LOCAL_FILE:/Users/marchhare/Downloads/checkstyle-coursera.xml:Coursera ALG4" />
+        <entry key="location-1" value="CLASSPATH:/sun_checks.xml:The default Checkstyle rules" />
+        <entry key="property-0.basedir" value="$PROJECT_DIR$" />
+        <entry key="property-0.suppressions" value="None" />
         <entry key="scan-before-checkin" value="false" />
         <entry key="scanscope" value="JavaOnly" />
         <entry key="suppress-errors" value="false" />

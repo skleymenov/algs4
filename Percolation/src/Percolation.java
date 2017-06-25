@@ -50,10 +50,15 @@ public class Percolation
      */
     private void checkArgs(int row, int col)
     {
-        if (row <= 0 || row > this.size)
+        if ( row > this.size)
             throw new IndexOutOfBoundsException("row index out of bounds");
-        if (col <= 0 || col > this.size)
+        else if (row <= 0)
+            throw new IllegalArgumentException("row index should be greater then zero");
+        if (col > this.size)
             throw new IndexOutOfBoundsException("col index out of bound");
+        else if (col <= 0)
+            throw new IllegalArgumentException("col index should be greater then zero");
+
     }
 
     /**
