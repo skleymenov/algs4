@@ -21,9 +21,9 @@ public class Deque<Item> implements Iterable
 
     private class Node
     {
-        Item item;
-        Node next;
-        Node prev;
+        private Item item;
+        private Node next;
+        private Node prev;
     }
 
     public Deque()                           // construct an empty deque
@@ -33,12 +33,12 @@ public class Deque<Item> implements Iterable
 
     public boolean isEmpty()                 // is the deque empty?
     {
-        return true;
+        return first == null;
     }
 
     public int size()                        // return the number of items on the deque
     {
-        return 0;
+        return size;
     }
 
     public void addFirst(Item item)          // add the item to the front
@@ -71,6 +71,7 @@ public class Deque<Item> implements Iterable
         if (isEmpty()) throw new NoSuchElementException();
         Item item = first.item;
         first = first.next;
+        if (first == null) last = null;
         size -= 1;
         return item;
     }
@@ -80,6 +81,7 @@ public class Deque<Item> implements Iterable
         if (isEmpty()) throw new NoSuchElementException();
         Item item = last.item;
         last = last.prev;
+        if (last == null) first = null;
         size -= 1;
         return item;
 
